@@ -48,6 +48,23 @@ char TxDataBuffer[32] =
 { 0 };
 char RxDataBuffer[32] =
 { 0 };
+
+enum inputchar
+{
+	state1menu = 0,
+	state2,
+	state3next3,
+	state4next4,
+	state5next0,
+	state6next5,
+	state7next0,
+	state8next0,
+	state9next0,
+	state10next2,
+	state11next5,
+	stateONLED,
+	statewrong,
+};
 uint16_t test = 0;
 /* USER CODE END PV */
 
@@ -152,6 +169,15 @@ int main(void)
 	  		/*This section just simmulate Work Load*/
 	  		HAL_Delay(100);
 	  		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+	  		switch(inputchar)
+	  		{
+	  			case "0":
+	  			{
+
+	  			}
+	  		}
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
