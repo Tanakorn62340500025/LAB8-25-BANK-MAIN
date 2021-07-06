@@ -44,11 +44,12 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
-float frequency = 1;
+GPIO_PinState SwitchState[2];
+uint32_t frequency = 1;
 uint32_t TimeStamp = 0;
-uint16_t LED1_HalfPeriod = 1000;
+uint32_t LED1_HalfPeriod = 1000;
 float ONOFF = 0;
+float press = 0;
 char TxDataBuffer[32] =
 { 0 };
 char RxDataBuffer[32] =
@@ -59,8 +60,9 @@ enum state
 	mainmenu = 0,
 	mainmenuwait,
 	menuledcontrol,
-	menubuttonstatus,
 	menuledcontrolwait,
+	menubuttonstatus,
+	menubuttonstatuswait
 };
 
 uint8_t state = mainmenu;
@@ -169,7 +171,16 @@ int main(void)
 	  		/*This section just simmulate Work Load*/
 //	  		HAL_Delay(100);
 //	  		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-			if(ONOFF == 1)
+	  		SwitchState[0] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	  		if(SwitchState[0] == GPIO_PIN_RESET && SwitchState[1] == GPIO_PIN_SET)
+	  		{
+	  			press = 1;
+	  		}
+	  		SwitchState[1] = SwitchState[0];
+
+	  		LED1_HalfPeriod = ((1000/frequency)/2);
+
+	  		if(ONOFF == 1)
 			{
 	  			if(HAL_GetTick() - TimeStamp >= LED1_HalfPeriod)
 				{
@@ -205,20 +216,182 @@ int main(void)
 	  				switch(inputchar)
 	  				{
 	  					case 'a':
-
+	  						if(frequency < 10)
+	  						{
+	  							frequency += 1;
+	  							if(frequency == 0)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 0 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 1)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 1 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 2)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 2 Hz\r\n", inputchar);
+	  							  	HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 3)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 3 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 4)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 4 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 5)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 5 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 6)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 6 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 7)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 7 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 8)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 8 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 9)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 9 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 10)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 10 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  						}
+	  						else if(frequency == 10)
+	  						{
+	  							sprintf(TxDataBuffer, "Present Frequency = 10 Hz\r\n", inputchar);
+	  							HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  						}
 	  						break;
 	  					case 's':
-
-	  					  	break;
+	  						if(frequency > 0)
+	  						{
+	  							frequency -= 1;
+	  							if(frequency == 0)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 0 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 1)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 1 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 2)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 2 Hz\r\n", inputchar);
+	  							  	HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 3)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 3 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 4)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 4 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 5)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 5 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 6)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 6 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 7)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 7 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 8)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 8 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 9)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 9 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  							else if(frequency == 10)
+	  							{
+	  								sprintf(TxDataBuffer, "Present Frequency = 10 Hz\r\n", inputchar);
+	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  							}
+	  						}
+	  						else if(frequency == 0)
+	  						{
+	  							sprintf(TxDataBuffer, "Present Frequency = 0 Hz\r\n", inputchar);
+	  							HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  						}
+	  						break;
 	  					case 'd':
-	  						ONOFF = 0;
+	  						if(ONOFF == 0)
+	  						{
+	  							ONOFF = 1;
+	  						}
+	  						else
+	  						{
+	  							ONOFF = 0;
+	  							HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  						}
 	  						break;
 	  					case 'x':
-
+	  						state = mainmenu;
 	  						break;
+	  					default:
+		  			  		sprintf(TxDataBuffer, "Wrong\r\n", inputchar);
+		  			  		HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
 	  				}
 	  				break;
-
+	  			case menubuttonstatus:
+	  				sprintf(TxDataBuffer, "Button Status\r\nx:back\r\n", inputchar);
+	  				HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  				state = menubuttonstatuswait;
+	  				break;
+	  			case menubuttonstatuswait:
+					if(press == 0)
+					{
+			  			sprintf(TxDataBuffer, "Button:Unpress\r\n", inputchar);
+			  			HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+					}
+					if(press == 1)
+					{
+						sprintf(TxDataBuffer, "Button:Unpress\r\n", inputchar);
+  			  			HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+					}
+	  				switch(inputchar)
+	  				{
+	  					case 'x':
+	  						state = mainmenu;
+	  						break;
+	  					default:
+		  			  		sprintf(TxDataBuffer, "Wrong\r\n", inputchar);
+		  			  		HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  				}
+	  				break;
 	  		}
 
     /* USER CODE END WHILE */
@@ -376,60 +549,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	//functionนี้คือจะไม่ขึ้น receive จนกว่าจะใส่ข้อมูลครบ ถ้าเรากำหนดขนาด 32  มันจะ received ก็ต่อเมื่อมันครบ 32
 }
 
-//	  						if(frequency < 10)
-//	  						{
-//	  							frequency += 1;
-//	  							if(frequency == 1)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 1 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 2)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 2 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 3)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 3 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 4)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 4 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 5)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 5 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 6)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 6 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 7)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 7 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 8)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 8 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  							else if(frequency == 9)
-//	  							{
-//	  								sprintf(TxDataBuffer, "Present Frequency = 9 Hz\r\n", inputchar);
-//	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  							}
-//	  						}
-//	  						else if(frequency == 10)
-//	  						{
-//	  							sprintf(TxDataBuffer, "Present Frequency = 10 Hz\r\n", inputchar);
-//	  							HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-//	  						}
+
 /* USER CODE END 4 */
 
 /**
