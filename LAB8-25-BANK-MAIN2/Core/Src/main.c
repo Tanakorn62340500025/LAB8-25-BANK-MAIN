@@ -54,7 +54,9 @@ enum state
 {
 	mainmenu = 0,
 	mainmenuwait,
-
+	menuledcontrol,
+	menubuttonstatus,
+	menuledcontrolwait,
 };
 
 uint8_t state = mainmenu;
@@ -167,7 +169,7 @@ int main(void)
 	  		switch(state)
 	  		{
 	  			case mainmenu:
-	  				sprintf(TxDataBuffer, "MainMenu\r\n0:LED CONTROL\r\n1:Button Status", inputchar);
+	  				sprintf(TxDataBuffer, "MainMenu\r\n0:LED CONTROL\r\n1:Button Status\r\n", inputchar);
 	  				HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
 	  				state = mainmenuwait;
 	  				break;
@@ -175,15 +177,36 @@ int main(void)
 	  				switch(inputchar)
 	  				{
 	  					case '0':
-	  					  	sprintf(TxDataBuffer, "\r\n", inputchar);
-	  					  	HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  					  	state = menuledcontrol;
 	  					  	break;
 	  					case '1':
-	  						sprintf(TxDataBuffer, "1\r\n", inputchar);
-	  					  	HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  						state = menubuttonstatus;
 	  					  	break;
 	  				}
 	  				break;
+	  			case menuledcontrol:
+	  				sprintf(TxDataBuffer, "LED CONTROL\r\na:Speed Up +1Hz\r\ns:Speed Down -1Hz\r\nd:On/off\r\nx:back\r\n", inputchar);
+	  				HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  				state = menuledcontrolwait;
+	  				break;
+	  			case menuledcontrolwait:
+	  				switch(inputchar)
+	  				{
+	  					case 'a':
+
+	  						break;
+	  					case 's':
+
+	  					  	break;
+	  					case 'd':
+
+	  						break;
+	  					case 'x':
+
+	  						break;
+	  				}
+	  				break;
+
 	  		}
 
     /* USER CODE END WHILE */
