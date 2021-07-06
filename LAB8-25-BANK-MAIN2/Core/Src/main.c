@@ -45,6 +45,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+float frequency = 1;
+
 char TxDataBuffer[32] =
 { 0 };
 char RxDataBuffer[32] =
@@ -163,8 +165,8 @@ int main(void)
 
 
 	  		/*This section just simmulate Work Load*/
-	  		HAL_Delay(100);
-	  		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+//	  		HAL_Delay(100);
+//	  		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
 	  		switch(state)
 	  		{
@@ -193,13 +195,21 @@ int main(void)
 	  				switch(inputchar)
 	  				{
 	  					case 'a':
+	  						if(frequency < 10)
+	  						{
+	  							frequency += 1;
+	  							HAL_Delay((1000/frequency));
+	  							if(frequency == 1)
+	  							{
 
+	  							}
+	  						}
 	  						break;
 	  					case 's':
 
 	  					  	break;
 	  					case 'd':
-
+	  						HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	  						break;
 	  					case 'x':
 
