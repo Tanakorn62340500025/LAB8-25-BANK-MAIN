@@ -1,8 +1,8 @@
-main.c:71:5:main	72	static
-main.c:160:6:SystemClock_Config	88	static
-main.c:205:13:MX_USART2_UART_Init	8	static
-main.c:238:13:MX_GPIO_Init	48	static
-main.c:267:6:UARTRecieveAndResponsePolling	40	static
-main.c:282:9:UARTRecieveIT	16	static
-main.c:296:6:HAL_UART_RxCpltCallback	16	static
-main.c:309:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:82:5:main	72	static
+main.c:196:6:SystemClock_Config	88	static
+main.c:241:13:MX_USART2_UART_Init	8	static
+main.c:274:13:MX_GPIO_Init	48	static
+main.c:303:6:UARTRecieveAndResponsePolling	40	static
+main.c:318:9:UARTRecieveIT	16	static
+main.c:332:6:HAL_UART_RxCpltCallback	16	static
+main.c:345:6:Error_Handler	4	static,ignoring_inline_asm

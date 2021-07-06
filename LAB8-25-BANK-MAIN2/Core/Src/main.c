@@ -44,27 +44,20 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+
 char TxDataBuffer[32] =
 { 0 };
 char RxDataBuffer[32] =
 { 0 };
 
-enum inputchar
+enum state
 {
-	state1menu = 0,
-	state2,
-	state3next3,
-	state4next4,
-	state5next0,
-	state6next5,
-	state7next0,
-	state8next0,
-	state9next0,
-	state10next2,
-	state11next5,
-	stateONLED,
-	statewrong,
+	mainmenu = 0,
+	mainmenuwait,
+
 };
+
+uint8_t state = mainmenu;
 uint16_t test = 0;
 /* USER CODE END PV */
 
@@ -113,7 +106,8 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   {
-	  char temp[]="HELLO WORLD\r\n please type something to test UART\r\n";
+	  //char temp[]="HELLO WORLD\r\n please type something to test UART\r\n";
+	  char temp[]="MAIN MENU\r\n please type something to test UART\r\n";
 	  //ประกาศ array , \r\n ขึ้นบรรทัดใหม่ของ ภาษา c
 	  HAL_UART_Transmit(&huart2, (uint8_t*)temp, strlen(temp),10);
 	  //strlen วางไว้ข้างหน้าตัวเเปรที่เราอยากจะเขียน ข้อความได้เลยอย่างเช่นอันนี้คือวางไว้ข้างหน้า temp ซึ่งนั้นก็คือตัวที่อยากจะทำการเขียนก็คือตัวเเปร temp
@@ -142,7 +136,7 @@ int main(void)
 	  		//UARTRecieveAndResponsePolling();
 
 	  		/*Method 2 Interrupt Mode*/
-	  		HAL_UART_Receive_IT(&huart2,  (uint8_t*)RxDataBuffer, 4);
+	  		HAL_UART_Receive_IT(&huart2,  (uint8_t*)RxDataBuffer, 32);
 	  		//กำหนดขนาดตรงนี้อันสุดท้ายสุด
             //จะเห็นจากlive expression ว่าตัวอักษรอะมันเข้าระบบไปเเล้วเเต่การจะ received ออกมาได้คือต้อง
 	  	//รอจนมันครบตัวที่ เรากำหนด เช่นเรากำหนดไว้ 32 มันก็จะรอจนกว่าจะครบตัวที่ 32 ถึงค่อย received
@@ -170,12 +164,26 @@ int main(void)
 	  		HAL_Delay(100);
 	  		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
-	  		switch(inputchar)
+	  		switch(state)
 	  		{
-	  			case "0":
-	  			{
-
-	  			}
+	  			case mainmenu:
+	  				sprintf(TxDataBuffer, "MainMenu\r\n0:LED CONTROL\r\n1:Button Status", inputchar);
+	  				HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  				state = mainmenuwait;
+	  				break;
+	  			case mainmenuwait:
+	  				switch(inputchar)
+	  				{
+	  					case '0':
+	  					  	sprintf(TxDataBuffer, "\r\n", inputchar);
+	  					  	HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  					  	break;
+	  					case '1':
+	  						sprintf(TxDataBuffer, "1\r\n", inputchar);
+	  					  	HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  					  	break;
+	  				}
+	  				break;
 	  		}
 
     /* USER CODE END WHILE */
