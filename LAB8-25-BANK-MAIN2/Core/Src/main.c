@@ -49,7 +49,6 @@ uint32_t frequency = 1;
 uint32_t TimeStamp = 0;
 uint32_t LED1_HalfPeriod = 1000;
 float ONOFF = 0;
-float press = 0;
 char TxDataBuffer[32] =
 { 0 };
 char RxDataBuffer[32] =
@@ -172,11 +171,8 @@ int main(void)
 //	  		HAL_Delay(100);
 //	  		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	  		SwitchState[0] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-	  		if(SwitchState[0] == GPIO_PIN_RESET && SwitchState[1] == GPIO_PIN_SET)
-	  		{
-	  			press = 1;
-	  		}
-	  		SwitchState[1] = SwitchState[0];
+
+
 
 	  		LED1_HalfPeriod = ((1000/frequency)/2);
 
@@ -282,7 +278,7 @@ int main(void)
 	  						}
 	  						break;
 	  					case 's':
-	  						if(frequency > 0)
+	  						if(frequency > 1)
 	  						{
 	  							frequency -= 1;
 	  							if(frequency == 0)
@@ -341,8 +337,15 @@ int main(void)
 	  								HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
 	  							}
 	  						}
+	  						else if(frequency == 1)
+	  						{
+	  							frequency = 0;
+	  							sprintf(TxDataBuffer, "Present Frequency = 1 Hz\r\n", inputchar);
+	  							HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  						}
 	  						else if(frequency == 0)
 	  						{
+	  							HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  							sprintf(TxDataBuffer, "Present Frequency = 0 Hz\r\n", inputchar);
 	  							HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
 	  						}
@@ -361,9 +364,6 @@ int main(void)
 	  					case 'x':
 	  						state = mainmenu;
 	  						break;
-	  					default:
-		  			  		sprintf(TxDataBuffer, "Wrong\r\n", inputchar);
-		  			  		HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
 	  				}
 	  				break;
 	  			case menubuttonstatus:
@@ -372,24 +372,19 @@ int main(void)
 	  				state = menubuttonstatuswait;
 	  				break;
 	  			case menubuttonstatuswait:
-					if(press == 0)
-					{
-			  			sprintf(TxDataBuffer, "Button:Unpress\r\n", inputchar);
-			  			HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-					}
-					if(press == 1)
-					{
-						sprintf(TxDataBuffer, "Button:Unpress\r\n", inputchar);
-  			  			HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
-					}
+	  		  		if(SwitchState[0] == GPIO_PIN_RESET && SwitchState[1] == GPIO_PIN_SET)
+	  		  		{
+	  			  		sprintf(TxDataBuffer, "Button:Press\r\n", inputchar);
+	  			  		HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
+	  		  		}
+	  		  		SwitchState[1] = SwitchState[0];
+
+
 	  				switch(inputchar)
 	  				{
 	  					case 'x':
 	  						state = mainmenu;
 	  						break;
-	  					default:
-		  			  		sprintf(TxDataBuffer, "Wrong\r\n", inputchar);
-		  			  		HAL_UART_Transmit(&huart2, (uint8_t*)TxDataBuffer, strlen(TxDataBuffer), 1000);
 	  				}
 	  				break;
 	  		}
